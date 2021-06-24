@@ -1,0 +1,37 @@
+---
+
+##  update the domain name of the MIG / (IP:PORT) of the MIG in the var file of this playbook before execution ##
+
+- name: Run a postgres sql script
+  hosts: all
+  user: ubuntu
+  become: true
+  #become_method: sudo
+  gather_facts: True
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: "Copy the script"
+      copy:
+        src: ./table.sql
+        dest: /tmp
+        owner: "root"
+        #group: postgres
+        mode: "777"
+
+    - name: "Run the script"
+      environment:
+        PGPASSWORD: 'database_password'
+      #become: true
+      #become_user: postgres
+      shell: psql -h {{ db_host }} -p {{ db_port }} -U {{ db_user }} -d test -f /tmp/table.sql
+      register: result
+    #environment:
+    #  PGPASSFILE: "database_password"
+    - name: Display result
+      debug:
+        var: result.stdout_lines
+      #environment:
+      #  PGPASSFILE: '{{ pgpassfile }}'
