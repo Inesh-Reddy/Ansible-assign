@@ -1,0 +1,4 @@
+db_host:  postgres.cl8ni8lybszr.us-east-2.rds.amazonaws.com
+db_port: 5432
+db_user: database_user
+pgpassfile: /tmp/.pgpass 
